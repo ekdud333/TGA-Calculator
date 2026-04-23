@@ -5,6 +5,9 @@ import plotly.graph_objects as go
 from scipy.signal import savgol_filter
 import io
 
+# NumPy 2.0 renamed np.trapz → np.trapezoid
+_trapz = getattr(np, "trapezoid", np.trapz)
+
 # ─── Password gate ────────────────────────────────────────────────────────────
 def check_password():
     if st.session_state.get("authenticated"):
@@ -237,7 +240,7 @@ def calculate_tangential(df, T_ref, T1, T2, T3, initial_weight_mg):
         # Linear baseline in temperature domain, sampled at each data point
         baseline = dtg_start + (dtg_end - dtg_start) * (temp_seg - T_start) / (T_end - T_start)
         net = dtg_seg - baseline  # positive where peak rises above baseline
-        return float(np.trapz(net, t_seg)) / 1000.0  # ug -> mg
+        return float(_trapz(net, t_seg)) / 1000.0  # ug -> mg
 
     H2O_mg = peak_integral(T1, T2, dtg_T1, dtg_T2)
     CO2_mg = peak_integral(T2, T3, dtg_T2, dtg_T3)
