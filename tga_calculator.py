@@ -6,7 +6,7 @@ from scipy.signal import savgol_filter
 import io
 
 # NumPy 2.0 renamed np.trapz → np.trapezoid
-_trapz = getattr(np, "trapezoid", np.trapz)
+_trapz = getattr(np, "trapezoid", getattr(np, "trapz", None))
 
 # ─── Password gate ────────────────────────────────────────────────────────────
 def check_password():
